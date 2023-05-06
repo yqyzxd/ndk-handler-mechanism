@@ -12,7 +12,7 @@ MessageQueue::MessageQueue() {
 }
 
 MessageQueue::~MessageQueue() {
-    //todo 清空mMessages
+    flush();
     pthread_mutex_destroy(&mThreadMutex);
     pthread_cond_destroy(&mThreadCond);
 }
@@ -55,6 +55,19 @@ Message *MessageQueue::next() {
 
     pthread_mutex_unlock(&mThreadMutex);
     return head;
+}
+
+void MessageQueue::flush() {
+    pthread_mutex_lock(&mThreadMutex);
+    Message* node=mMessages;
+    while (node!= nullptr){
+        Message* next=node->next;
+        delete node;
+        node=next;
+    }
+
+    pthread_mutex_unlock(&mThreadMutex);
+
 }
 
 void MessageQueue::quit() {

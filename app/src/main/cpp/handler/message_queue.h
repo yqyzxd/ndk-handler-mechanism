@@ -27,6 +27,7 @@ public:
 
     Message* next();
     void quit();
+    void flush();
 };
 
 
